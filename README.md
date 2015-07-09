@@ -6,6 +6,8 @@ This module is a workaround to address the need for a fail-fast option in Jasmin
 * https://github.com/jasmine/jasmine/issues/414
 * https://github.com/juliemr/minijasminenode/issues/20
 
+Inspired by https://github.com/goodeggs/jasmine-bail-fast, which doesn't seem to be working with Jasmine 2.x.
+
 ### Usage
 This module is implemented as a Jasmine reporter. Add to the global Jasmine environment like so:
 
