@@ -14,6 +14,30 @@ This module is implemented as a Jasmine reporter. Add to the global Jasmine envi
 
 ```javascript
 var failFast = require('jasmine-fail-fast');
-
 jasmine.getEnv().addReporter(failFast());
 ```
+
+### Examples
+
+#### Protractor
+In the Protractor conf file:
+
+```javascript
+onPrepare: function() {
+  ...
+  var failFast = require('jasmine-fail-fast');
+  jasmine.getEnv().addReporter(failFast());
+  ...
+}
+```
+
+#### As a Jasmine helper
+Create a new .js file within the [helpers](http://jasmine.github.io/2.3/node.html#section-9) [folder](http://jasmine.github.io/2.3/node.html#section-Load_configuration_from_a_file_or_from_an_object.):
+
+```javascript
+//<path-to-helpers>/fail-fast.js
+var failFast = require('jasmine-fail-fast');
+jasmine.getEnv().addReporter(failFast());
+```
+#### grunt-contrib-jasmine
+Set up as a helper, [optionally overriding the default helpers path](https://github.com/gruntjs/grunt-contrib-jasmine#optionshelpers).
