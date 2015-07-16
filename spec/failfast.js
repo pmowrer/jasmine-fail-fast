@@ -1,5 +1,5 @@
 import suite from './suite';
-import failFast from '../src/index';
+import {init} from '../src/index';
 
-jasmine.getEnv().addReporter(failFast());
+jasmine.getEnv().addReporter(init());
 suite();
