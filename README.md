@@ -17,6 +17,15 @@ var failFast = require('jasmine-fail-fast');
 jasmine.getEnv().addReporter(failFast.init());
 ```
 
+The init() method accepts an optional argument for a function to run after encountering a test failure:
+
+```javascript
+var sleepAWhile = function() {
+  return browser.sleep(10000);
+}
+jasmine.getEnv().addReporter(failFast.init(sleepAWhile));
+```
+
 ### Examples
 
 #### Protractor
