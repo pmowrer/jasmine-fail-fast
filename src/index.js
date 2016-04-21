@@ -6,13 +6,19 @@ let refs;
 // being, making Jasmine essentially skip all tests after the first failure.
 // https://github.com/jasmine/jasmine/issues/414
 // https://github.com/juliemr/minijasminenode/issues/20
-export function init() {
+export function init(functionToRunAfterFailure) {
   refs = getSpecReferences();
 
   return {
     specDone(result) {
       if (result.status === 'failed') {
-        disableSpecs(refs);
+        if (functionToRunAfterFailure) {
+            functionToRunAfterFailure().then(function() {
+                disableSpecs(refs);
+            });
+        } else {
+            disableSpecs(refs);
+        }
       }
     }
   };
