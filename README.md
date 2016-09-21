@@ -12,14 +12,22 @@ Inspired by https://github.com/goodeggs/jasmine-bail-fast, which doesn't seem to
 ## Usage
 This module is implemented as a Jasmine reporter. Add to the global Jasmine environment like so:
 
+### Jasmine as browser global
 ```javascript
 var failFast = require('jasmine-fail-fast');
 jasmine.getEnv().addReporter(failFast.init());
 ```
 
-### Examples
+### Jasmine Node API
+```javascript
+var Jasmine = require('jasmine');
+var jasmine = new Jasmine();
+jasmine.addReporter(failFast.init());
+```
 
-#### Protractor
+## Examples
+
+### Protractor
 In the Protractor conf file:
 
 ```javascript
@@ -31,7 +39,7 @@ onPrepare: function() {
 }
 ```
 
-#### As a Jasmine helper
+### As a Jasmine helper
 Create a new .js file within the [helpers](http://jasmine.github.io/2.3/node.html#section-9) [folder](http://jasmine.github.io/2.3/node.html#section-Load_configuration_from_a_file_or_from_an_object.):
 
 ```javascript
@@ -39,5 +47,5 @@ Create a new .js file within the [helpers](http://jasmine.github.io/2.3/node.htm
 var failFast = require('jasmine-fail-fast');
 jasmine.getEnv().addReporter(failFast.init());
 ```
-#### grunt-contrib-jasmine
+### grunt-contrib-jasmine
 Set up as a helper, [optionally overriding the default helpers path](https://github.com/gruntjs/grunt-contrib-jasmine#optionshelpers).
