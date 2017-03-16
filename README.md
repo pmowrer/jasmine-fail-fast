@@ -10,7 +10,7 @@ This module is a workaround to address the need for a fail-fast option in Jasmin
 Inspired by https://github.com/goodeggs/jasmine-bail-fast, which doesn't seem to be working with Jasmine 2.x.
 
 ## Usage
-This module is implemented as a Jasmine reporter. Add to the global Jasmine environment like so:
+This module is implemented as a Jasmine reporter.
 
 ### Jasmine as browser global
 ```javascript
@@ -22,6 +22,7 @@ jasmine.getEnv().addReporter(failFast.init());
 ```javascript
 var Jasmine = require('jasmine');
 var jasmine = new Jasmine();
+var failFast = require('jasmine-fail-fast');
 jasmine.addReporter(failFast.init());
 ```
 
