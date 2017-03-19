@@ -28,15 +28,23 @@ jasmine.addReporter(failFast.init());
 
 ## Examples
 
-### Protractor
-In the Protractor conf file:
+### [karma-jasmine](https://github.com/karma-runner/karma-jasmine)
+In the Karma configuration file:
+
+```javascript
+module.exports = function(config) {
+  var failFast = require('jasmine-fail-fast');
+  window.jasmine.getEnv().addReporter(failFast.init());
+}
+```
+
+### [Protractor](https://github.com/angular/protractor)
+In the Protractor configuration file:
 
 ```javascript
 onPrepare: function() {
-  ...
   var failFast = require('jasmine-fail-fast');
   jasmine.getEnv().addReporter(failFast.init());
-  ...
 }
 ```
 
