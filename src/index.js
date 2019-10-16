@@ -1,35 +1,23 @@
 import _ from 'lodash';
-import fs from 'fs';
 
 let refs;
-
-function failingFast() {
-  if (!process.env.FAIL_FAST) return false
-  return fs.existsSync('__jasmine-is-failing-fast')
-}
-
-function writeFailingStateToDisk() {
-  fs.writeFileSync('__jasmine-is-failing-fast', 'true')
-}
-
-export function cleanUp() {
-  if (failingFast()) fs.unlink('__jasmine-is-failing-fast', () => {})
-}
 
 // Jasmine doesn't yet have an option to fail fast. This "reporter" is a workaround for the time
 // being, making Jasmine essentially skip all tests after the first failure.
 // https://github.com/jasmine/jasmine/issues/414
 // https://github.com/juliemr/minijasminenode/issues/20
-export function init(hardcore = false) {
+export function init(alreadyFailed = false, onFailure) {
   refs = getSpecReferences();
 
-  if (hardcore && failingFast()) xEverything(refs)
+  if (alreadyFailed) xEverything(refs)
 
   return {
     specDone(result) {
       if (result.status === 'failed') {
         disableSpecs(refs);
-        if (hardcore) writeFailingStateToDisk()
+        if (alreadyFailed || !onFailure) return
+        alreadyFailed = true
+        onFailure()
       }
     }
   };
