@@ -1,10 +1,10 @@
 {
-  "name": "jasmine-fail-fast",
+  "name": "@outlinerisk/jasmine-fail-hardcore",
   "version": "2.0.0",
   "description": "Allow Jasmine tests to \"fail-fast\", exiting on the first failure instead of running all tests no matter what. ",
   "repository": {
     "type": "git",
-    "url": "git://github.com/Updater/jasmine-fail-fast.git"
+    "url": "git://github.com/outline-insurance/jasmine-fail-hardcore.git"
   },
   "main": "dist/jasmine-fail-fast.js",
   "scripts": {
