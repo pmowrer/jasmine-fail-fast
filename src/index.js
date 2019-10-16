@@ -54,7 +54,7 @@ export function xEverything() {
       let test = it.apply(null, args);
       test.markedPending = true
       test.result.pendingReason = 'failfast'
-      return suite;
+      return test;
     });
 }
 
