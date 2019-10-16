@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import fs from 'fs';
 
 let refs;
 
@@ -22,7 +23,7 @@ export function cleanUp() {
 export function init(hardcore = false) {
   refs = getSpecReferences();
 
-  if (hardcore && failingFast()) disableSpecs(refs)
+  if (hardcore && failingFast()) xEverything(refs)
 
   return {
     specDone(result) {
@@ -32,6 +33,29 @@ export function init(hardcore = false) {
       }
     }
   };
+}
+
+/**
+ * Turn every call to describe into a (skipped) xdescribe, and same for it/xit.
+ *
+ * @return void
+ */
+export function xEverything() {
+  jasmine.getEnv().describe = _.wrap(jasmine.getEnv().describe,
+    (describe, ...args) => {
+      let suite = describe.apply(null, args);
+      suite.markedPending = true
+      suite.result.pendingReason = 'failfast'
+      return suite;
+    });
+
+  jasmine.getEnv().it = _.wrap(jasmine.getEnv().it,
+    (it, ...args) => {
+      let test = it.apply(null, args);
+      test.markedPending = true
+      test.result.pendingReason = 'failfast'
+      return suite;
+    });
 }
 
 /**
