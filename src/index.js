@@ -87,10 +87,17 @@ export function disableSpecs() {
 
   refs.specs.forEach(spec => spec.disable());
 
-  refs.suites.forEach(suite => {
+  refs.suites.forEach(disableSuite);
+}
+
+function disableSuite(suite) {
+    suite.children.forEach(function (spec) {
+      spec.markedPending = true
+      if (spec.children) disableSuite(spec)
+    })
+    suite.markedPending = true
     suite.beforeFns = [];
     suite.afterFns = [];
     suite.beforeAllFns = [];
     suite.afterAllFns = [];
-  });
 }
