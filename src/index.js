@@ -23,6 +23,65 @@ export function init(alreadyFailed = false, onFailure) {
   };
 }
 
+
+/**
+ * Searches through the spec tree for a suite whose description is tagged @sequence
+ * AND which contains the test result that failed.
+ *
+ * If a failed @sequence suite is found, it disables just that suite, so that the
+ * rest of the spec tree can proceed.
+ *
+ * @param {TestResult} result - the failing test
+ */
+function disableSpecSequence(result) {
+  const { rootSuites } = refs
+  rootSuites.find(function(suite) {
+    const sequence = findSequenceForResult(result, suite)
+    if (sequence) {
+      disableSuite(sequence)
+      return true
+    }
+  })
+}
+
+/**
+ * Find a test suite that was tagged `isSequence = true` during init, and which
+ * contains the failing test provided. Recursively searches all child suites
+ *
+ * @param {TestResult} result - the failing test
+ * @param {TestSuite} suite - a parent suite to search
+ * @return {TestSuite} - The highest parent suite that is marked @sequence and which
+ *    contains the failing test
+ */
+function findSequenceForResult(result, suite) {
+  const sequence = __findSequenceForResult(result, suite)
+  if (typeof sequence !== 'boolean') return sequence
+}
+
+/**
+ * Helper function that does all work of the above, except may return true or
+ * false if either the matching test is not found or it's not within a sequence.
+ */
+function __findSequenceForResult(result, suite) {
+  if (suite.description === result.description) {
+    return true
+  }
+  if (!suite.children) return false
+  for(var i=0; i<suite.children.length; i++) {
+    const match = findSequenceForResult(result, suite.children[i])
+    if (match === false) {
+      continue
+    } else if (match === true && suite.isSequence) {
+      return suite
+    } else if (match === true) {
+      return true
+    } else {
+      return match
+    }
+  }
+  return false
+}
+
 /**
  * Turn every call to describe into a (skipped) xdescribe, and same for it/xit.
  *
@@ -52,8 +111,9 @@ export function xEverything() {
  * @return {Object} An object with `specs` and `suites` properties, arrays of respective types.
  */
 export function getSpecReferences() {
-  let specs = [];
-  let suites = [];
+  const specs = [];
+  const suites = [];
+  const rootSuites = [];
 
   // Use specFilter to gather references to all specs.
   jasmine.getEnv().specFilter = spec => {
@@ -65,13 +125,16 @@ export function getSpecReferences() {
   jasmine.getEnv().describe = _.wrap(jasmine.getEnv().describe,
     (describe, ...args) => {
       let suite = describe.apply(null, args);
+      if (description.match(/@sequence/)) suite.isSequence = true;
+      if (!suite.parentSuite.description) rootSuites.push(suite);
       suites.push(suite);
       return suite;
     });
 
   return {
     specs,
-    suites
+    suites,
+    rootSuites,
   };
 }
 
