@@ -25,7 +25,16 @@ export function init(alreadyFailed = false, onFailure) {
 }
 
 export function shutItDown() {
-  console.log('SHUT DOWN ALL THE THINGS!')
+  console.log([
+    '| ',
+    '|  🔥     🚀',
+    '| 💥💥💥',
+    '| 🔥🔥 FAIL FAST 🔥💥',
+    '| 💥🌶',
+    '|  🔥',
+    '| 💥',
+    '| ',
+    ].join('\n'))
   disableSpecs(refs);
   if (failed || !handleFailure) return
   failed = true
