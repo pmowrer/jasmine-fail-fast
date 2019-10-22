@@ -1,6 +1,8 @@
 import _ from 'lodash';
 
 let refs;
+let failed;
+let handleFailure;
 
 // Jasmine doesn't yet have an option to fail fast. This "reporter" is a workaround for the time
 // being, making Jasmine essentially skip all tests after the first failure.
@@ -10,17 +12,24 @@ export function init(alreadyFailed = false, onFailure) {
   refs = getSpecReferences();
 
   if (alreadyFailed) xEverything(refs)
+  failed = alreadyFailed
+  handleFailure = onFailure
 
   return {
     specDone(result) {
       if (result.status === 'failed') {
-        disableSpecs(refs);
-        if (alreadyFailed || !onFailure) return
-        alreadyFailed = true
-        onFailure()
+        shutItDown()
       }
     }
   };
+}
+
+export function shutItDown() {
+  console.log('SHUT DOWN ALL THE THINGS!')
+  disableSpecs(refs);
+  if (failed || !handleFailure) return
+  failed = true
+  handleFailure()
 }
 
 
@@ -115,6 +124,20 @@ export function getSpecReferences() {
   const suites = [];
   const rootSuites = [];
 
+  var proc = jasmine.getEnv().process
+  proc.removeAllListeners('unhandledRejection');
+  proc.removeAllListeners('uncaughtException');
+  proc.on('unhandledRejection', uncaught);
+  proc.on('uncaughtException', uncaught);
+
+  function uncaught(weirdness) {
+    proc.removeAllListeners('unhandledRejection');
+    proc.removeAllListeners('uncaughtException');
+    var error = new Error('this is fucking bad')
+    console.log(error.message)
+    console.error(error.stack)
+  }
+
   // Use specFilter to gather references to all specs.
   jasmine.getEnv().specFilter = spec => {
     specs.push(spec);
@@ -138,6 +161,7 @@ export function getSpecReferences() {
   };
 }
 
+
 /**
  * Hacky workaround to facilitate "fail fast". Disable all specs (basically `xit`), then
  * remove references to all before/after functions, else they'll still run. Disabling the
@@ -158,6 +182,7 @@ function disableSuite(suite) {
       spec.markedPending = true
       if (spec.children) disableSuite(spec)
     })
+    console.log('suite params', Object.keys(suite))
     suite.markedPending = true
     suite.beforeFns = [];
     suite.afterFns = [];
