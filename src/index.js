@@ -133,19 +133,19 @@ export function getSpecReferences() {
   const suites = [];
   const rootSuites = [];
 
-  var proc = jasmine.getEnv().process
-  proc.removeAllListeners('unhandledRejection');
-  proc.removeAllListeners('uncaughtException');
-  proc.on('unhandledRejection', uncaught);
-  proc.on('uncaughtException', uncaught);
+  // var proc = jasmine.getEnv().process
+  // proc.removeAllListeners('unhandledRejection');
+  // proc.removeAllListeners('uncaughtException');
+  // proc.on('unhandledRejection', uncaught);
+  // proc.on('uncaughtException', uncaught);
 
-  function uncaught(weirdness) {
-    proc.removeAllListeners('unhandledRejection');
-    proc.removeAllListeners('uncaughtException');
-    var error = new Error('this is fucking bad')
-    console.log(error.message)
-    console.error(error.stack)
-  }
+  // function uncaught(weirdness) {
+  //   proc.removeAllListeners('unhandledRejection');
+  //   proc.removeAllListeners('uncaughtException');
+  //   var error = new Error('this is fucking bad')
+  //   console.log(error.message)
+  //   console.error(error.stack)
+  // }
 
   // Use specFilter to gather references to all specs.
   jasmine.getEnv().specFilter = spec => {
@@ -153,10 +153,12 @@ export function getSpecReferences() {
     return true;
   };
 
+
   // Wrap jasmine's describe function to gather references to all suites.
   jasmine.getEnv().describe = _.wrap(jasmine.getEnv().describe,
     (describe, ...args) => {
       let suite = describe.apply(null, args);
+      const [ description ] = args
       if (description.match(/@sequence/)) suite.isSequence = true;
       if (!suite.parentSuite.description) rootSuites.push(suite);
       suites.push(suite);
@@ -191,7 +193,6 @@ function disableSuite(suite) {
       spec.markedPending = true
       if (spec.children) disableSuite(spec)
     })
-    console.log('suite params', Object.keys(suite))
     suite.markedPending = true
     suite.beforeFns = [];
     suite.afterFns = [];
