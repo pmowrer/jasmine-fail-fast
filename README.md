@@ -1,4 +1,4 @@
-# jasmine-fail-fast [![build status](https://travis-ci.org/Updater/jasmine-fail-fast.svg?branch=master)](https://travis-ci.org/Updater/jasmine-fail-fast)
+# jasmine-fail-fast [![build status](https://travis-ci.org/pmowrer/jasmine-fail-fast.svg?branch=master)](https://travis-ci.org/Updater/jasmine-fail-fast)
 
 Allow Jasmine tests to "fail-fast", exiting on the first failure instead of running all tests no matter what. This can save a great deal of time running slow, expensive tests, such as Protractor e2e tests.
 
