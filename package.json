@@ -1,6 +1,6 @@
 {
   "name": "jasmine-fail-fast",
-  "version": "2.0.0",
+  "version": "0.0.0-development",
   "description": "Allow Jasmine tests to \"fail-fast\", exiting on the first failure instead of running all tests no matter what. ",
   "repository": {
     "type": "git",
